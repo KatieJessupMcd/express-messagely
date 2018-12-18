@@ -33,10 +33,10 @@ class User {
       `SELECT password FROM users WHERE username = $1`,
       [username]
     );
-    const hashedPassword = result.rows[0];
-
+    const hashedPassword = result.rows[0].password;
+    console.log('hashed password', hashedPassword);
     // DO WE NEED TO DO ANYTHING WITH JWTS HERE???
-    if (password.length > 0) {
+    if (password.length != 0) {
       if (await bcrypt.compare(password, hashedPassword)) {
         return true;
       }

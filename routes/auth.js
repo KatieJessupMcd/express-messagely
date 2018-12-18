@@ -17,14 +17,16 @@ const User = require('../models/user');
 router.post('/login', async function(req, res, next) {
   try {
     const { username, password } = req.body;
+    console.log(username, password);
     if (await User.authenticate(username, password)) {
       let token = jwt.sign({ username }, SECRET_KEY);
+      console.log('Token', token);
       await User.updateLoginTimestamp(username);
       return res.json({ token });
     }
     return next({ message: 'Invalid username/password' });
   } catch (error) {
-    return res.json(error);
+    return next(error);
   }
 });
 

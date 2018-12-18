@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "test": "jest -i",
+    "test": "jest",
     "start": "node server.js"
   },
   "author": "",
@@ -19,5 +19,9 @@
     "pg": "^7.5.0"
   },
   "keywords": [],
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "supertest": "^3.3.0"
+  }
 }
