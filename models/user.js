@@ -18,8 +18,8 @@ class User {
   static async register({ username, password, first_name, last_name, phone }) {
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_ROUNDS);
     const result = await db.query(
-      `INSERT INTO users (username, password, first_name, last_name, phone)
-          VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO users (username, password, first_name, last_name, phone, join_at)
+          VALUES ($1, $2, $3, $4, $5, current_timestamp)
           RETURNING username, first_name, last_name, phone`,
       [username, hashedPassword, first_name, last_name, phone]
     );
@@ -34,7 +34,6 @@ class User {
       [username]
     );
     const hashedPassword = result.rows[0].password;
-    console.log('hashed password', hashedPassword);
     // DO WE NEED TO DO ANYTHING WITH JWTS HERE???
     if (password.length != 0) {
       if (await bcrypt.compare(password, hashedPassword)) {
@@ -97,7 +96,7 @@ class User {
   // IS RETURN VAL JSON???
   static async messagesFrom(username) {
     const result = await db.query(
-      `SELECT id, to_user, body, sent_at, read_at FROM messages WHERE from_username = $1`,
+      `SELECT id, to_username, body, sent_at, read_at FROM messages WHERE from_username = $1`,
       [username]
     );
     if (result.rows.length === 0) {
@@ -116,7 +115,7 @@ class User {
 
   static async messagesTo(username) {
     const result = await db.query(
-      `SELECT id, from_user, body, sent_at, read_at FROM messages WHERE to_username = $1`,
+      `SELECT id, from_username, body, sent_at, read_at FROM messages WHERE to_username = $1`,
       [username]
     );
     if (result.rows.length === 0) {

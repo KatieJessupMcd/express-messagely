@@ -26,8 +26,11 @@ router.get('/:id', ensureLoggedIn, async function(req, res, next) {
   try {
     const message = await Message.get(req.params.id);
     const { username } = req;
-    const { from_user, to_user } = message;
-    if (username === from_user.username || username === to_user.username) {
+    const { from_username, to_username } = message;
+    if (
+      username === from_username.username ||
+      username === to_username.username
+    ) {
       return res.json({ message });
     }
     throw new Error('Invalid user');

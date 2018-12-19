@@ -17,10 +17,8 @@ const User = require('../models/user');
 router.post('/login', async function(req, res, next) {
   try {
     const { username, password } = req.body;
-    console.log(username, password);
     if (await User.authenticate(username, password)) {
       let token = jwt.sign({ username }, SECRET_KEY);
-      console.log('Token', token);
       await User.updateLoginTimestamp(username);
       return res.json({ token });
     }
@@ -38,9 +36,10 @@ router.post('/login', async function(req, res, next) {
  */
 
 router.post('/register', async function(req, res, next) {
+  console.log('trying2register');
   try {
     const { username, password, first_name, last_name, phone } = req.body;
-    await User.register(username, password, first_name, last_name, phone);
+    await User.register({ username, password, first_name, last_name, phone });
     await User.updateLoginTimestamp(username);
     let token = jwt.sign({ username }, SECRET_KEY);
     return res.json({ token });
